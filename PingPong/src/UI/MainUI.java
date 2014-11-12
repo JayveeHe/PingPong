@@ -46,6 +46,8 @@ public class MainUI extends JFrame {
 	private JButton button;
 	final JTextPane showText = new JTextPane();
 	Socket socket;
+	InputStream in;
+	OutputStream out;
 	private JPanel CanvasPanel;
 
 	// DrawThread dt = new DrawThread();
@@ -73,22 +75,15 @@ public class MainUI extends JFrame {
 						@Override
 						public void run() {
 							ItemManager.addDomain(new Board("left", 0, 50));
+							ItemManager.addDomain(new Board("right",
+									CanvasPanel.getWidth() - 10, CanvasPanel
+											.getHeight() / 2));
 							while (true) {
 								if (null != ItemManager.itemMap)
 									for (ABasicItems items : ItemManager.itemMap
 											.values()) {
 										items.onDraw(CanvasPanel.getGraphics());
-//										System.out.println(items.getX()
-//												+ "====" + items.getY());
-
 									}
-//								try {
-//									Thread.sleep(100);
-									 CanvasPanel.repaint();
-//								} catch (InterruptedException e) {
-//									// TODO Auto-generated catch block
-//									e.printStackTrace();
-//								}
 							}
 						}
 					}
@@ -117,6 +112,7 @@ public class MainUI extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				System.out.println(arg0.getKeyCode());
+				CanvasPanel.repaint();
 				Board left = (Board) ItemManager.itemMap.get("left");
 				switch (arg0.getKeyCode()) {
 				case 38:// 上
@@ -129,7 +125,6 @@ public class MainUI extends JFrame {
 				default:
 					break;
 				}
-				// board_left.setLocation(x, y);
 			}
 		});
 		CanvasPanel.addMouseListener(new MouseAdapter() {
@@ -162,7 +157,7 @@ public class MainUI extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				String text = text_input.getText();
 				try {
-					socket.getOutputStream().write(text.getBytes("utf-8"));
+					out.write(text.getBytes("utf-8"));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -170,13 +165,12 @@ public class MainUI extends JFrame {
 		});
 		panel_1.add(button);
 
-		// board_left = new Board("left"0, CanvasPanel.getHeight() / 2);
-		JButton btn_board = new JButton("板");
-		btn_board.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		panel_1.add(btn_board);
+		// JButton btn_board = new JButton("板");
+		// btn_board.addActionListener(new ActionListener() {
+		// public void actionPerformed(ActionEvent arg0) {
+		// }
+		// });
+		// panel_1.add(btn_board);
 
 		checkBox = new JCheckBox("是否主机");
 		checkBox.setBounds(233, 5, 73, 23);
@@ -195,7 +189,9 @@ public class MainUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				iP = text_IP.getText();
-				connect(iP);
+				// connect(iP);
+				ConnectThread ct = new ConnectThread(iP);
+				ct.start();
 			}
 		});
 		checkBox.addActionListener(new ActionListener() {
@@ -209,59 +205,60 @@ public class MainUI extends JFrame {
 
 	}
 
-	public void connect(String IP) {
-		if (isHost) {
-			try {
-				ServerSocket serverSocket = new ServerSocket(1234);
-				socket = serverSocket.accept();
-				serverSocket.close();
-				isConnected = true;
-				showText.setText("已连接");
-				System.out.println(socket.getRemoteSocketAddress());
-				final InputStream in = socket.getInputStream();
-				new Runnable() {
-					public void run() {
-						while (!socket.isClosed()) {
-							int count = 0;
-							while (count == 0) {
-								try {
-									count = in.available();
-									byte[] b = new byte[count];
-									in.read(b);
-									String text = new String(b, "utf-8");
-									if (text.length() != 0)
-										System.out.println(text);
-									if (text.equals("exit")) {
-										socket.close();
-										isConnected = false;
-										showText.setText("未连接");
-									}
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							}
-						}
-					}
-				}.run();
-				System.out.println("连接成功");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				socket = new Socket(IP, 1234);
-				isConnected = true;
-				showText.setText("已连接");
-				OutputStream outputStream = socket.getOutputStream();
-				// System.out.println(outputStream.toString());
-				// outputStream.write("nihao".getBytes("UTF-8"));
-				// socket.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+	// public void connect(String IP) {
+	// if (isHost) {
+	// try {
+	// ServerSocket serverSocket = new ServerSocket(1234);
+	// socket = serverSocket.accept();
+	// serverSocket.close();
+	// isConnected = true;
+	// showText.setText("已连接");
+	// System.out.println(socket.getRemoteSocketAddress());
+	// final InputStream in = socket.getInputStream();
+	// new Runnable() {
+	// public void run() {
+	// while (!socket.isClosed()) {
+	// int count = 0;
+	// while (count == 0) {
+	// try {
+	// count = in.available();
+	// byte[] b = new byte[count];
+	// in.read(b);
+	// String text = new String(b, "utf-8");
+	// if (text.length() != 0)
+	// System.out.println(text);
+	// if (text.equals("exit")) {
+	// socket.close();
+	// isConnected = false;
+	// showText.setText("未连接");
+	// }
+	// } catch (IOException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// }
+	// }
+	// }
+	// }.run();
+	// System.out.println("连接成功");
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// } else {
+	// try {
+	// socket = new Socket(IP, 1234);
+	// isConnected = true;
+	// showText.setText("已连接");
+	// out = socket.getOutputStream();
+	// in = socket.getInputStream();
+	// // System.out.println(outputStream.toString());
+	// // outputStream.write("nihao".getBytes("UTF-8"));
+	// // socket.close();
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// }
+	// }
 
 	class myPanel extends JPanel {
 
@@ -273,5 +270,96 @@ public class MainUI extends JFrame {
 
 	public JPanel getCanvasPanel() {
 		return CanvasPanel;
+	}
+
+	public class ReceiverThread extends Thread {
+		InputStream in;
+		Socket socket;
+
+		public ReceiverThread(Socket socket) {
+			this.socket = socket;
+			try {
+				this.in = socket.getInputStream();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		@Override
+		public void run() {
+			while (!socket.isClosed()) {
+				int count = 0;
+				while (count == 0) {
+					try {
+						count = in.available();
+						byte[] b = new byte[count];
+						in.read(b);
+						String text = new String(b, "utf-8");
+						if (text.length() != 0)
+							System.out.println(text);
+						if (text.equals("exit")) {
+							socket.close();
+							isConnected = false;
+							showText.setText("未连接");
+						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+
+	public class SenderThread extends Thread {
+		Socket socket;
+		OutputStream out;
+
+		public SenderThread(Socket socket, OutputStream out) {
+			this.out = out;
+			this.socket = socket;
+		}
+
+		@Override
+		public void run() {
+			while (!socket.isClosed()) {
+				// if(out.)
+			}
+		}
+	}
+
+	public class ConnectThread extends Thread {
+		String IP;
+
+		public ConnectThread(String IP) {
+			this.IP = IP;
+		}
+
+		@Override
+		public void run() {
+			try {
+				if (isHost) {
+					ServerSocket serverSocket = new ServerSocket(1234);
+					socket = serverSocket.accept();
+					serverSocket.close();
+					isConnected = true;
+					showText.setText("已连接");
+					System.out.println(socket.getRemoteSocketAddress());
+					System.out.println("连接成功");
+
+				} else {
+					socket = new Socket(IP, 1234);
+					isConnected = true;
+					showText.setText("已连接");
+					// OutputStream outputStream = socket.getOutputStream();
+				}
+//				in = socket.getInputStream();
+				out = socket.getOutputStream();
+				new ReceiverThread(socket).start();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
