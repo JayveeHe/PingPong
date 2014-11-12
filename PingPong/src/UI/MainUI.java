@@ -20,12 +20,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import javax.swing.JCheckBox;
+
 import java.awt.FlowLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.GridLayout;
+
 import javax.swing.JTextPane;
+
+import Items.Board;
+
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MainUI extends JFrame {
 
@@ -42,6 +49,8 @@ public class MainUI extends JFrame {
 	final JTextPane showText = new JTextPane();
 	Socket socket;
 	private JPanel CanvasPanel;
+
+	private Board board_left;
 
 	/**
 	 * Launch the application.
@@ -70,13 +79,21 @@ public class MainUI extends JFrame {
 		setContentPane(contentPane);
 
 		CanvasPanel = new JPanel();
-		CanvasPanel.setBounds(5, 39, 477, 216);
+
 		CanvasPanel.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
-				System.out.println(arg0.getKeyChar());
+				System.out.println(arg0.getKeyCode());
 			}
 		});
+		CanvasPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				CanvasPanel.requestFocus();
+				System.out.println(arg0.getX() + "=" + arg0.getY());
+			}
+		});
+		CanvasPanel.setBounds(5, 39, 477, 216);
 		contentPane.setLayout(null);
 		text_IP = new JTextField();
 		text_IP.setBounds(5, 5, 222, 23);
@@ -106,6 +123,14 @@ public class MainUI extends JFrame {
 			}
 		});
 		panel_1.add(button);
+
+		JButton btn_board = new JButton("板");
+		btn_board.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				board_left = new Board(0, CanvasPanel.getHeight() / 2);
+			}
+		});
+		panel_1.add(btn_board);
 
 		checkBox = new JCheckBox("是否主机");
 		checkBox.setBounds(233, 5, 73, 23);
@@ -194,5 +219,16 @@ public class MainUI extends JFrame {
 		public void paint(Graphics g) {
 			// super.paint(arg0);
 		}
+	}
+
+	class drawThread extends Thread {
+		@Override
+		public void run() {
+			System.out.println("sss");
+		}
+	}
+
+	public JPanel getCanvasPanel() {
+		return CanvasPanel;
 	}
 }
