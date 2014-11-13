@@ -48,7 +48,7 @@ public class Ball extends ABasicItems {
 			} else {
 				x += fx;
 				y += fy;
-				System.out.println(x + " " + y);
+//				System.out.println(x + " " + y);
 			}
 			
 		}
