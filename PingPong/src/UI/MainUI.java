@@ -1,9 +1,7 @@
 package UI;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Graphics;
-import java.awt.TextField;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -24,10 +22,10 @@ import javax.swing.JCheckBox;
 import java.awt.FlowLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.GridLayout;
 
 import javax.swing.JTextPane;
 
+import Items.ABasicItems;
 import Items.Board;
 
 import java.awt.Color;
@@ -50,7 +48,10 @@ public class MainUI extends JFrame {
 	Socket socket;
 	private JPanel CanvasPanel;
 
+	// DrawThread dt = new DrawThread();
+
 	private Board board_left;
+	private Board board_right;
 
 	/**
 	 * Launch the application.
@@ -61,6 +62,38 @@ public class MainUI extends JFrame {
 				try {
 					MainUI frame = new MainUI();
 					frame.setVisible(true);
+
+					class DrawThread extends Thread {
+						JPanel CanvasPanel;
+
+						public DrawThread(JPanel CanvasPanel) {
+							this.CanvasPanel = CanvasPanel;
+						}
+
+						@Override
+						public void run() {
+							ItemManager.addDomain(new Board("left", 0, 50));
+							while (true) {
+								if (null != ItemManager.itemMap)
+									for (ABasicItems items : ItemManager.itemMap
+											.values()) {
+										items.onDraw(CanvasPanel.getGraphics());
+//										System.out.println(items.getX()
+//												+ "====" + items.getY());
+
+									}
+//								try {
+//									Thread.sleep(100);
+									 CanvasPanel.repaint();
+//								} catch (InterruptedException e) {
+//									// TODO Auto-generated catch block
+//									e.printStackTrace();
+//								}
+							}
+						}
+					}
+					DrawThread dt = new DrawThread(frame.getCanvasPanel());
+					dt.start();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -84,6 +117,19 @@ public class MainUI extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				System.out.println(arg0.getKeyCode());
+				Board left = (Board) ItemManager.itemMap.get("left");
+				switch (arg0.getKeyCode()) {
+				case 38:// 上
+					System.out.println(left.getX() + "-" + left.getY());
+					left.setLocation(left.getX(), left.getY() - 5);
+					break;
+				case 40:// 下
+					left.setLocation(left.getX(), left.getY() + 5);
+					break;
+				default:
+					break;
+				}
+				// board_left.setLocation(x, y);
 			}
 		});
 		CanvasPanel.addMouseListener(new MouseAdapter() {
@@ -124,10 +170,10 @@ public class MainUI extends JFrame {
 		});
 		panel_1.add(button);
 
+		// board_left = new Board("left"0, CanvasPanel.getHeight() / 2);
 		JButton btn_board = new JButton("板");
 		btn_board.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				board_left = new Board(0, CanvasPanel.getHeight() / 2);
 			}
 		});
 		panel_1.add(btn_board);
@@ -157,6 +203,10 @@ public class MainUI extends JFrame {
 				isHost = checkBox.isSelected();
 			}
 		});
+
+		// DrawThread dt = new DrawThread(CanvasPanel);
+		// dt.start();
+
 	}
 
 	public void connect(String IP) {
@@ -218,13 +268,6 @@ public class MainUI extends JFrame {
 		@Override
 		public void paint(Graphics g) {
 			// super.paint(arg0);
-		}
-	}
-
-	class drawThread extends Thread {
-		@Override
-		public void run() {
-			System.out.println("sss");
 		}
 	}
 
