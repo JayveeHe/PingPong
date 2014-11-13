@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -93,7 +94,7 @@ public class MainUI extends JFrame {
 											.values()) {
 										items.onDraw(time,
 												CanvasPanel.getGraphics());
-//										time = System.currentTimeMillis();
+										// time = System.currentTimeMillis();
 									}
 								}
 								count++;
@@ -101,14 +102,14 @@ public class MainUI extends JFrame {
 									System.out.println(count);
 									count = 0;
 								}
-//								System.out.println("结束时间："
-//										+ System.currentTimeMillis());
-								 try {
-								 Thread.sleep(1);
-								 } catch (InterruptedException e) {
-								 // TODO Auto-generated catch block
-								 e.printStackTrace();
-								 }
+								// System.out.println("结束时间："
+								// + System.currentTimeMillis());
+								try {
+									Thread.sleep(1);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 							}
 						}
 					}
@@ -137,16 +138,42 @@ public class MainUI extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				System.out.println(arg0.getKeyCode());
-				CanvasPanel.repaint();
-				Board left = (Board) ItemManager.itemMap.get("left");
+				Board board;
+				if (isHost) {
+					board = (Board) ItemManager.itemMap.get("left");
+				} else {
+					board = (Board) ItemManager.itemMap.get("right");
+				}
 				CanvasPanel.repaint();
 				switch (arg0.getKeyCode()) {
 				case 38:// 上
-					System.out.println(left.getX() + "-" + left.getY());
-					left.setLocation(left.getX(), left.getY() - 5);
+					// System.out.println(board.getX() + "-" + board.getY());
+					board.setLocation(board.getX(), board.getY() - 5);
+					if (isConnected) {
+						try {
+							out.write("move.up".getBytes("utf-8"));
+						} catch (UnsupportedEncodingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 					break;
 				case 40:// 下
-					left.setLocation(left.getX(), left.getY() + 5);
+					board.setLocation(board.getX(), board.getY() + 5);
+					if (isConnected) {
+						try {
+							out.write("move.down".getBytes("utf-8"));
+						} catch (UnsupportedEncodingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 					break;
 				default:
 					break;
@@ -255,6 +282,26 @@ public class MainUI extends JFrame {
 							socket.close();
 							isConnected = false;
 							showText.setText("未连接");
+						}
+						if (text.equals("move.up")) {
+							Board board;
+							if (isHost) {
+								board = (Board) ItemManager.itemMap
+										.get("right");
+							} else {
+								board = (Board) ItemManager.itemMap.get("left");
+							}
+							board.setLocation(board.getX(), board.getY() - 5);
+						}
+						if (text.equals("move.down")) {
+							Board board;
+							if (isHost) {
+								board = (Board) ItemManager.itemMap
+										.get("right");
+							} else {
+								board = (Board) ItemManager.itemMap.get("left");
+							}
+							board.setLocation(board.getX(), board.getY() + 5);
 						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
