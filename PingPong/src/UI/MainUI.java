@@ -228,7 +228,7 @@ public class MainUI extends JFrame {
 		}
 	}
 
-	public JPanel getCanvasPanel() {
+	public JPanel getCanvasPanel() {  //啥意思
 		return CanvasPanel;
 	}
 }
