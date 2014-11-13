@@ -84,11 +84,14 @@ public class MainUI extends JFrame {
 							long time = System.currentTimeMillis();
 							while (true) {
 								time = System.currentTimeMillis() - time;
-								if (null != ItemManager.itemMap)
+								if (null != ItemManager.itemMap) {
 									for (ABasicItems items : ItemManager.itemMap
 											.values()) {
-										items.onDraw(time,CanvasPanel.getGraphics());
+										items.onDraw(time,
+												CanvasPanel.getGraphics());
 									}
+								}
+								time = System.currentTimeMillis();
 
 							}
 						}
@@ -286,7 +289,6 @@ public class MainUI extends JFrame {
 					socket = new Socket(IP, 1234);
 					isConnected = true;
 					showText.setText("已连接");
-					// OutputStream outputStream = socket.getOutputStream();
 				}
 				// in = socket.getInputStream();
 				out = socket.getOutputStream();

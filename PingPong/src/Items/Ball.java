@@ -22,7 +22,6 @@ public class Ball extends ABasicItems {
 
 	@Override
 	public void setKey(String key) {
-		// TODO Auto-generated method stub
 		this.key = key;
 	}
 
@@ -55,13 +54,5 @@ public class Ball extends ABasicItems {
 
 		}
 
-		// @Override
-		// public void run() {
-		// // TODO Auto-generated method stub
-		// while (true) {
-		// x+=fx;
-		// y+=fy;
-		// }
-		// }
 	}
 }
