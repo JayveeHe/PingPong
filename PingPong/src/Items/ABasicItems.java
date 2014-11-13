@@ -7,7 +7,7 @@ public abstract class ABasicItems {
 	int y;
 	String key;
 
-	public abstract void onDraw(Graphics g);
+	public abstract void onDraw(long deltaTime, Graphics g);
 
 	public void setLocation(int x, int y) {
 		this.x = x;

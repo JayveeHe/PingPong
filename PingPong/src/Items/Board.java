@@ -12,7 +12,7 @@ public class Board extends ABasicItems {
 	}
 
 	@Override
-	public void onDraw(Graphics g) {
+	public void onDraw(long time,Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fill3DRect(getX(), getY(), 10, 100, true);
 	}

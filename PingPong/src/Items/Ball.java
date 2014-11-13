@@ -21,11 +21,15 @@ public class Ball extends ABasicItems {
 	}
 
 	@Override
-	public void onDraw(Graphics g) {
+	public void setKey(String key) {
 		// TODO Auto-generated method stub
+		this.key = key;
+	}
+
+	@Override
+	public void onDraw(long deltaTime, Graphics g) {
 		g.setColor(Color.BLUE);
 		g.fillArc(x, y, r, r, 0, 360);
-		// g.fillOval(x, y, 5, 5);
 		count++;
 		if (count % 100 == 0) {
 			panel.repaint();
@@ -39,52 +43,25 @@ public class Ball extends ABasicItems {
 
 			if (x > 477) {
 				fx = -fx;
-				// x += fx;
-				// y += fy;
 			}
 			if (y < 0) {
 				fy = -fy;
-				// x += fx;
-				// y += fy;
 			}
 			if (y > 216) {
 				fy = -fy;
-				// x += fx;
-				// y += fy;
-				// } else if (x > 477 && y > 216) {
-				// fx = -fx;
-				// fy = -fy;
-				// x += fx;
-				// y += fy;
-				// } else if (x < 0 && y < 0) {
-				// fx = -fx;
-				// fy = -fy;
-				// x += fx;
-				// y += fy;
 			}
-			// else {
-			// x += fx;
-			// y += fy;
-			// }
 
 			System.out.println(count + " " + x + " " + y);
+
 		}
 
+		// @Override
+		// public void run() {
+		// // TODO Auto-generated method stub
+		// while (true) {
+		// x+=fx;
+		// y+=fy;
+		// }
+		// }
 	}
-
-	@Override
-	public void setKey(String key) {
-		// TODO Auto-generated method stub
-		this.key = key;
-	}
-
-	// @Override
-	// public void run() {
-	// // TODO Auto-generated method stub
-	// while (true) {
-	// x+=fx;
-	// y+=fy;
-	// }
-	// }
-
 }
