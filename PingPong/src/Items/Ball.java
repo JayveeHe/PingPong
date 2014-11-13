@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 
 public class Ball extends ABasicItems {
 	int r;
-	double fx = 5, fy = 5;
+	double fx = 2, fy = 2;
 	int count = 0;
 	JPanel panel;
 
@@ -30,7 +30,7 @@ public class Ball extends ABasicItems {
 		g.setColor(Color.BLUE);
 		g.fillArc(x, y, r, r, 0, 360);
 		count++;
-		if (count % 100 == 0) {
+		if (count % 10 == 0) {
 			panel.repaint();
 			// count=0;
 			x += fx;
@@ -50,7 +50,7 @@ public class Ball extends ABasicItems {
 				fy = -fy;
 			}
 
-			System.out.println(count + " " + x + " " + y);
+//			System.out.println(deltaTime);
 
 		}
 

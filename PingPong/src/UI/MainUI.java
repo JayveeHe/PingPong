@@ -82,17 +82,33 @@ public class MainUI extends JFrame {
 									CanvasPanel.getWidth() - 10, CanvasPanel
 											.getHeight() / 2));
 							long time = System.currentTimeMillis();
+							int count = 0;
 							while (true) {
-								time = System.currentTimeMillis() - time;
+								// System.out.println("开始时间："+System.currentTimeMillis());
+								if (count == 0) {
+									time = System.currentTimeMillis();
+								}
 								if (null != ItemManager.itemMap) {
 									for (ABasicItems items : ItemManager.itemMap
 											.values()) {
 										items.onDraw(time,
 												CanvasPanel.getGraphics());
+//										time = System.currentTimeMillis();
 									}
 								}
-								time = System.currentTimeMillis();
-
+								count++;
+								if (System.currentTimeMillis() - time > 0) {
+									System.out.println(count);
+									count = 0;
+								}
+//								System.out.println("结束时间："
+//										+ System.currentTimeMillis());
+								 try {
+								 Thread.sleep(1);
+								 } catch (InterruptedException e) {
+								 // TODO Auto-generated catch block
+								 e.printStackTrace();
+								 }
 							}
 						}
 					}
