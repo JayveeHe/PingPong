@@ -26,6 +26,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JTextPane;
 
 import Items.ABasicItems;
+import Items.Ball;
 import Items.Board;
 
 import java.awt.Color;
@@ -73,6 +74,7 @@ public class MainUI extends JFrame {
 						@Override
 						public void run() {
 							ItemManager.addDomain(new Board("left", 0, 50));
+							ItemManager.addDomain(new Ball(CanvasPanel,"ball", 0, 0,10));
 							while (true) {
 								if (null != ItemManager.itemMap)
 									for (ABasicItems items : ItemManager.itemMap
@@ -83,8 +85,8 @@ public class MainUI extends JFrame {
 
 									}
 //								try {
-//									Thread.sleep(100);
-									 CanvasPanel.repaint();
+//									Thread.sleep(500);
+//									 
 //								} catch (InterruptedException e) {
 //									// TODO Auto-generated catch block
 //									e.printStackTrace();
@@ -118,6 +120,7 @@ public class MainUI extends JFrame {
 			public void keyPressed(KeyEvent arg0) {
 				System.out.println(arg0.getKeyCode());
 				Board left = (Board) ItemManager.itemMap.get("left");
+				CanvasPanel.repaint();
 				switch (arg0.getKeyCode()) {
 				case 38:// 上
 					System.out.println(left.getX() + "-" + left.getY());
