@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 
 public class Ball extends ABasicItems {
 	int r;
-	 double fx = 5, fy = 5;
+	double fx = 5, fy = 5;
 	int count = 0;
 	JPanel panel;
 
@@ -29,28 +29,45 @@ public class Ball extends ABasicItems {
 		count++;
 		if (count % 100 == 0) {
 			panel.repaint();
+			// count=0;
+			x += fx;
+			y += fy;
+
 			if (x < 0) {
 				fx = -fx;
-				x += fx;
-				y += fy;
-			} else if (x > 477) {
-				fx = -fx;
-				x += fx;
-				y += fy;
-			} else if (y < 0) {
-				fy = -fy;
-				x += fx;
-				y += fy;
-			} else if (y > 216) {
-				fy = -fy;
-				x += fx;
-				y += fy;
-			} else {
-				x += fx;
-				y += fy;
-//				System.out.println(x + " " + y);
 			}
-			
+
+			if (x > 477) {
+				fx = -fx;
+				// x += fx;
+				// y += fy;
+			}
+			if (y < 0) {
+				fy = -fy;
+				// x += fx;
+				// y += fy;
+			}
+			if (y > 216) {
+				fy = -fy;
+				// x += fx;
+				// y += fy;
+				// } else if (x > 477 && y > 216) {
+				// fx = -fx;
+				// fy = -fy;
+				// x += fx;
+				// y += fy;
+				// } else if (x < 0 && y < 0) {
+				// fx = -fx;
+				// fy = -fy;
+				// x += fx;
+				// y += fy;
+			}
+			// else {
+			// x += fx;
+			// y += fy;
+			// }
+
+			System.out.println(count + " " + x + " " + y);
 		}
 
 	}
